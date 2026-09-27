@@ -20,14 +20,6 @@ just accuracy — since accuracy alone can hide a model that's dangerously
 weak on the minority/critical class.
 
 ## Architecture
-
-```
-Input (30 features)
-   -> Hidden Layer 1 (16 neurons, ReLU activation)
-   -> Hidden Layer 2 (8 neurons, ReLU activation)
-   -> Output Layer (1 neuron, Sigmoid activation)
-```
-
 - **ReLU** in the hidden layers — avoids the vanishing-gradient problem that
   sigmoid/tanh have in deeper networks.
 - **Sigmoid** on the output — squashes the result to a 0–1 probability,
@@ -74,6 +66,10 @@ On a held-out test set the model achieves:
 (Exact numbers vary slightly by random seed — see console output when you
 run it.)
 
+### Training Loss Convergence
+
+![Training Loss Over Time](loss_curve.png)[cite: 1]
+
 ## Files
 
 - `neural_network.py` — the full implementation: activation functions,
@@ -81,7 +77,7 @@ run it.)
   loading/preprocessing, and evaluation. Run this file directly to train
   and see results.
 - `plot_loss.py` — generates `loss_curve.png`, a chart of training loss
-  over time, showing the network converging.
+  over time, showing the network converging[cite: 1].
 - `loss_history.csv` — raw loss values per epoch, generated after running
   `neural_network.py`.
 
@@ -91,21 +87,3 @@ run it.)
 pip install numpy scikit-learn matplotlib
 python neural_network.py     # trains the model, prints results, saves loss_history.csv
 python plot_loss.py          # generates loss_curve.png from that history
-```
-
-## Things worth understanding before an interview
-
-- **Why backpropagation works**: it's the chain rule from calculus, applied
-  layer by layer, to compute how much each weight is "to blame" for the
-  final error.
-- **Why the output-layer gradient simplifies to `(y_pred - y_true)`**: this
-  is a known mathematical result specific to pairing sigmoid activation
-  with binary cross-entropy loss — the two derivatives cancel out neatly.
-- **Why ReLU in hidden layers but sigmoid only at the output**: ReLU is
-  faster to train and avoids vanishing gradients in hidden layers; sigmoid
-  is used at the output specifically because it produces a valid
-  probability (bounded between 0 and 1).
-- **Why standardise features**: without it, features with naturally larger
-  numeric ranges (e.g. "mean area") would dominate the gradient updates
-  over features with smaller ranges (e.g. "mean smoothness"), even if
-  they're not more important.
